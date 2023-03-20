@@ -58,6 +58,21 @@ export default defineComponent({
 				}
 			}
 			return width.toString().length + 2;
+		},
+		/**
+		 * Create a new style rule at the specified index in the stylesheet.
+		 * @param index
+		 */
+		newStyle (index?: number): void {
+			const style = {
+				selector: '',
+				properties: []
+			};
+			if (typeof index === 'number') {
+				this.stylesheet.splice(index + 1, 0, style);
+				return;
+			}
+			this.stylesheet.push(style);
 		}
 	}
 });
@@ -65,6 +80,7 @@ export default defineComponent({
 
 <template>
 	<div class="editor" :style="`--line-number-gutter-width: ${calculateLineNumbersWidth()}ch;`">
+		<button @click.stop="newStyle(-1)">+</button>
 		<div v-for="style, styleIndex in stylesheet" class="style">
 			<span class="selector">
 				<input
@@ -112,6 +128,8 @@ export default defineComponent({
 				</template>;
 			</div>
 			<span class="selectorClose">}</span>
+			<br>
+			<button @click.stop="newStyle(styleIndex)">+</button>
 		</div>
 	</div>
 </template>
