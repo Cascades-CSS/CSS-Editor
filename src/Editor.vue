@@ -5,6 +5,16 @@
 import { defineComponent } from 'vue';
 import AngleInput from './components/AngleInput.vue';
 
+interface Property {
+	key: string,
+	value: string
+}
+
+interface Style {
+	selector: string,
+	properties: Property[]
+}
+
 interface ValueType {
 	name: string,
 	color: string,
@@ -25,18 +35,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			css: {
-				'.style-1': {
-					'display': 'block',
-					'width': '200px',
-					'height': '400px',
-					'border': '1px solid #ff0000'
-				},
-				'.style-2': {
-					'border': '1px solid red',
-					'angle': '60deg'
-				}
-			} as { [key: string]: { [key: string]: string } }
+			stylesheet: [] as Style[]
 		};
 	},
 	methods: {
@@ -52,7 +51,7 @@ export default defineComponent({
 		},
 		calculateLineNumbersWidth (): number {
 			let width = 0;
-			for (const style of Object.values(this.css)) {
+			for (const style of Object.values(this.stylesheet)) {
 				width += 2;
 				for (const property of Object.values(style)) {
 					width++;
@@ -66,25 +65,25 @@ export default defineComponent({
 
 <template>
 	<div class="editor" :style="`--line-number-gutter-width: ${calculateLineNumbersWidth()}ch;`">
-		<div v-for="[selector, properties] of Object.entries(css)" class="style">
+		<div v-for="style, styleIndex in stylesheet" class="style">
 			<span class="selector">
 				<input
 					type="text"
 					style="color: inherit;"
 					:style="{
-						width: `${selector.length}ch`
+						width: `${style.selector.length}ch`
 					}"
-					:value="selector"
+					v-model="style.selector"
 				>
 			</span>&nbsp;{
-			<div v-for="[key, value] of Object.entries(properties)" class="property">
+			<div v-for="property, propertyIndex in style.properties" class="property">
 				<input
 					type="text"
 					class="key"
 					:style="{
-						width: `${key.length}ch`
+						width: `${property.key.length}ch`
 					}"
-					:value="key"
+					v-model="property.key"
 				>:
 				<template v-for="string of value.split(' ')">
 					<span
@@ -112,7 +111,6 @@ export default defineComponent({
 					>
 				</template>;
 			</div>
-			<br v-if="Object.entries(properties).length <= 0">
 			<span class="selectorClose">}</span>
 		</div>
 	</div>
