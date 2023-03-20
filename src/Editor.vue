@@ -123,6 +123,17 @@ export default defineComponent({
 			});
 			return;
 		}
+	},
+	mounted () {
+		if (this.stylesheet.length <= 0) {
+			this.stylesheet.push({
+				selector: '',
+				properties: []
+			});
+			this.$nextTick(() => {
+				this.focusInput(0);
+			});
+		}
 	}
 });
 </script>
