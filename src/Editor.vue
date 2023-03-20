@@ -129,7 +129,6 @@ export default defineComponent({
 
 <template>
 	<div class="editor" :style="`--line-number-gutter-width: ${calculateLineNumbersWidth()}ch;`">
-		<button @click.stop="newStyle(0)">+</button>
 		<div v-for="style, styleIndex in stylesheet" class="style">
 			<span class="selector">
 				<input
@@ -182,12 +181,10 @@ export default defineComponent({
 						@keypress.enter="newProperty(styleIndex, propertyIndex + 1)"
 					>
 				</template>;
-				<template v-if="style.properties.length <= 0">
-					<br>
-					<button @click.stop="newProperty(styleIndex, 0)"></button>
-					<br>
-				</template>
 			</div>
+			<br v-if="style.properties.length <= 0">
+			<button style="margin-left: 4ch;" @click.stop="newProperty(styleIndex, style.properties.length)">+</button>
+			<br>
 			<span class="selectorClose">}</span>
 			<br>
 			<button @click.stop="newStyle(styleIndex)">+</button>
@@ -277,5 +274,19 @@ input:focus-within {
 
 .key {
 	color: #9CDCFE;
+}
+
+button {
+	min-width: 7ch;
+	margin: 0.3rem 0;
+	color: #8888;
+	background: transparent;
+	border: 1px solid #8884;
+	border-radius: 5px;
+	cursor: pointer;
+}
+button:hover {
+	color: #fff;
+	border-color: #888;
 }
 </style>
