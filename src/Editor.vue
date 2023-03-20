@@ -89,6 +89,26 @@ export default defineComponent({
 				return;
 			}
 			this.stylesheet.push(style);
+		},
+		/**
+		 * Add a new style property at the specified index to a given style rule in the stylesheet.
+		 * @param styleIndex
+		 * @param propertyIndex
+		 */
+		newProperty (styleIndex: number, propertyIndex?: number): void {
+			const property = {
+				key: '',
+				value: ''
+			};
+			if (typeof propertyIndex === 'number') {
+				this.stylesheet[styleIndex]?.properties.splice(propertyIndex, 0, property);
+				// Switch focus to the new property's key input.
+				this.$nextTick(() => {
+					this.focusInput(styleIndex, propertyIndex);
+				});
+				return;
+			}
+			this.stylesheet[styleIndex]?.properties.push(property);
 		}
 	}
 });
@@ -107,6 +127,7 @@ export default defineComponent({
 						width: `${style.selector.length}ch`
 					}"
 					v-model="style.selector"
+					@keypress.enter="newProperty(styleIndex, 0)"
 				>
 			</span>&nbsp;{
 			<div v-for="property, propertyIndex in style.properties" class="property">
@@ -144,8 +165,14 @@ export default defineComponent({
 							color: getValueType(string).color
 						}"
 						:value="string"
+						@keypress.enter="newProperty(styleIndex, propertyIndex + 1)"
 					>
 				</template>;
+				<template v-if="style.properties.length <= 0">
+					<br>
+					<button @click.stop="newProperty(styleIndex, 0)"></button>
+					<br>
+				</template>
 			</div>
 			<span class="selectorClose">}</span>
 			<br>
