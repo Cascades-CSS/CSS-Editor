@@ -109,6 +109,19 @@ export default defineComponent({
 				return;
 			}
 			this.stylesheet[styleIndex]?.properties.push(property);
+		},
+		/**
+		 * Remove a style property at the specified index from a given style rule in the stylesheet.
+		 * @param styleIndex
+		 * @param propertyIndex
+		 */
+		deleteProperty (styleIndex: number, propertyIndex: number): void {
+			this.stylesheet[styleIndex]?.properties.splice(propertyIndex, 1);
+			// Switch focus to the previous property's key input.
+			this.$nextTick(() => {
+				this.focusInput(styleIndex, propertyIndex > 0 ? propertyIndex - 1 : undefined);
+			});
+			return;
 		}
 	}
 });
@@ -140,6 +153,7 @@ export default defineComponent({
 					}"
 					v-model="property.key"
 					@keypress.enter="focusInput(styleIndex, propertyIndex, 0)"
+					@keydown.backspace="deleteProperty(styleIndex, propertyIndex)"
 				>:
 				<template v-for="string, valueIndex of property.value.split(' ')">
 					<span
