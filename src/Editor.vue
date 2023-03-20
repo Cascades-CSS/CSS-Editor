@@ -51,9 +51,9 @@ export default defineComponent({
 		},
 		calculateLineNumbersWidth (): number {
 			let width = 0;
-			for (const style of Object.values(this.stylesheet)) {
+			for (const style of this.stylesheet) {
 				width += 2;
-				for (const property of Object.values(style)) {
+				for (const property of style.properties) {
 					width++;
 				}
 			}
