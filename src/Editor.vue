@@ -59,6 +59,18 @@ export default defineComponent({
 			}
 			return width.toString().length + 2;
 		},
+		focusInput (styleIndex: number, propertyIndex?: number, valueIndex?: number): void {
+			let ref = `selector-${styleIndex}`;
+			if (typeof propertyIndex === 'number') {
+				ref += `-property-${propertyIndex}`;
+			}
+			if (typeof valueIndex === 'number') {
+				ref += `-value-${valueIndex}`;
+			}
+			console.log(ref);
+			const elem = this.$refs[ref] as HTMLInputElement[] | undefined;
+			elem?.[0]?.focus();
+		},
 		/**
 		 * Create a new style rule at the specified index in the stylesheet.
 		 * @param index
@@ -69,7 +81,11 @@ export default defineComponent({
 				properties: []
 			};
 			if (typeof index === 'number') {
-				this.stylesheet.splice(index + 1, 0, style);
+				this.stylesheet.splice(index, 0, style);
+				// Switch focus to the new style's selector input.
+				this.$nextTick(() => {
+					this.focusInput(index);
+				});
 				return;
 			}
 			this.stylesheet.push(style);
@@ -80,10 +96,11 @@ export default defineComponent({
 
 <template>
 	<div class="editor" :style="`--line-number-gutter-width: ${calculateLineNumbersWidth()}ch;`">
-		<button @click.stop="newStyle(-1)">+</button>
+		<button @click.stop="newStyle(0)">+</button>
 		<div v-for="style, styleIndex in stylesheet" class="style">
 			<span class="selector">
 				<input
+					:ref="`selector-${styleIndex}`"
 					type="text"
 					style="color: inherit;"
 					:style="{
@@ -94,14 +111,16 @@ export default defineComponent({
 			</span>&nbsp;{
 			<div v-for="property, propertyIndex in style.properties" class="property">
 				<input
+					:ref="`selector-${styleIndex}-property-${propertyIndex}`"
 					type="text"
 					class="key"
 					:style="{
 						width: `${property.key.length}ch`
 					}"
 					v-model="property.key"
+					@keypress.enter="focusInput(styleIndex, propertyIndex, 0)"
 				>:
-				<template v-for="string of value.split(' ')">
+				<template v-for="string, valueIndex of property.value.split(' ')">
 					<span
 						v-if="getValueType(string).additionalInput"
 						class="additionalInput"
@@ -117,6 +136,7 @@ export default defineComponent({
 						>
 					</span>
 					<input
+						:ref="`selector-${styleIndex}-property-${propertyIndex}-value-${valueIndex}`"
 						type="text"
 						class="value"
 						:style="{
