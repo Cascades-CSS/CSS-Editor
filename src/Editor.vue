@@ -3,23 +3,9 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import AngleInput from './components/AngleInput.vue';
+import AngleInput from '@/components/AngleInput.vue';
+import type { StyleRule, ValueType } from '@/types';
 
-interface Property {
-	key: string,
-	value: string
-}
-
-interface Style {
-	selector: string,
-	properties: Property[]
-}
-
-interface ValueType {
-	name: string,
-	color: string,
-	additionalInput?: string
-}
 const valueTypes = new Map() as Map<RegExp, ValueType>;
 valueTypes.set(/^[a-z]+/ui, { name: 'string', color: '#CE9178' });
 valueTypes.set(/^[0-9]+deg$/ui, { name: 'angle', color: '#B5CEA8', additionalInput: 'angle' });
@@ -35,7 +21,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			stylesheet: [] as Style[]
+			stylesheet: [] as StyleRule[]
 		};
 	},
 	methods: {
