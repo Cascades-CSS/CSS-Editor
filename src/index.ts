@@ -32,6 +32,18 @@ export class CSSEditor {
 		this.updateCallbacks.splice(callbackId, 1, undefined);
 	}
 
+	stringify (stylesheet?: StyleRule[]): string {
+		let output = '';
+		for (const rule of stylesheet ?? this.internalStylesheet) {
+			output += `${rule.selector} {\n`;
+			for (const property of rule.properties) {
+				output += `${property.key}: ${property.value};`;
+			}
+			output += '}\n';
+		}
+		return output;
+	}
+
 	private updateFromComponent (stylesheet: StyleRule[]): void {
 		this.internalStylesheet = stylesheet;
 		for (const callback of this.updateCallbacks) {
