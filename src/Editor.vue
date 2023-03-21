@@ -223,6 +223,7 @@ input[type="color"] {
 input:hover {
 	border: 1px solid #8886;
 }
+input:focus,
 input:focus-within {
 	border: 1px solid #888;
 }
@@ -262,9 +263,6 @@ input:focus-within {
 	color: #D7BA7D;
 }
 
-.selectorClose {
-}
-
 .property {
 	padding-left: 4ch;
 }
@@ -276,9 +274,9 @@ input:focus-within {
 button {
 	min-width: 7ch;
 	margin: 0.3rem 0;
-	color: #8888;
+	color: #8885;
 	background: transparent;
-	border: 1px solid #8884;
+	border: 1px solid #8882;
 	border-radius: 5px;
 	cursor: pointer;
 }
