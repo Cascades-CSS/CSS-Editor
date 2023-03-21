@@ -44,6 +44,37 @@ export class CSSEditor {
 		return output;
 	}
 
+	static parse (stylesheet: string): StyleRule[] {
+		const output = [] as StyleRule[];
+
+		const rules = stylesheet.matchAll(/([^\{]+)\{([^\}]+)*\}/gmui);
+	
+		for (const rule of rules) {
+			if (!rule[1]) continue;
+	
+			const properties = [];
+	
+			for (const prop of rule[2]?.split(';') ?? []) {
+				const key = prop.split(':')[0]?.trim().replace('\n', '');
+				const value = prop.split(':')[1]?.trim().replace('\n', '');
+
+				if (!key || !value) continue;
+
+				properties.push({
+					key,
+					value 
+				});
+			}
+	
+			output.push({
+				selector: rule[1]?.trim().replace('\n', ''),
+				properties
+			});
+		}
+	
+		return output;
+	}
+
 	private updateFromComponent (stylesheet: StyleRule[]): void {
 		this.internalStylesheet = stylesheet;
 		for (const callback of this.updateCallbacks) {
