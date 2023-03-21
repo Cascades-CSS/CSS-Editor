@@ -12,6 +12,7 @@ export class CSSEditor {
 	constructor (element: string) {
 		this.app = createApp(Editor);
 		this.editor = this.app.mount(element) as ComponentPublicInstance<{}, {}, { stylesheet: StyleRule[] }>;
+		this.editor.$watch('stylesheet', (stylesheet) => this.updateFromComponent(stylesheet));
 	}
 
 	get stylesheet (): StyleRule[] {
@@ -20,5 +21,9 @@ export class CSSEditor {
 
 	set stylesheet (value: StyleRule[]) {
 		this.internalStylesheet = value;
+	}
+
+	private updateFromComponent (stylesheet: StyleRule[]): void {
+		this.internalStylesheet = stylesheet;
 	}
 }
