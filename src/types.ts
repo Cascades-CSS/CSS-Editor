@@ -13,3 +13,5 @@ export interface ValueType {
 	color: string,
 	additionalInput?: string
 }
+
+export type UpdateCallback = (stylesheet: string) => void
