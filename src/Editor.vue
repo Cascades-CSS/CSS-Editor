@@ -37,9 +37,9 @@ export default defineComponent({
 		},
 		calculateLineNumbersWidth (): number {
 			let width = 0;
-			for (const style of this.stylesheet) {
+			for (const rule of this.stylesheet) {
 				width += 2;
-				for (const property of style.properties) {
+				for (const property of rule.properties) {
 					width++;
 				}
 			}
@@ -67,7 +67,7 @@ export default defineComponent({
 			};
 			if (typeof index === 'number') {
 				this.stylesheet.splice(index, 0, style);
-				// Switch focus to the new style's selector input.
+				// Switch focus to the new style rule's selector input.
 				this.$nextTick(() => {
 					this.focusInput(index);
 				});
@@ -76,7 +76,7 @@ export default defineComponent({
 			this.stylesheet.push(style);
 		},
 		/**
-		 * Add a new style property at the specified index to a given style rule in the stylesheet.
+		 * Add a new style property at the specified index to a given rule in the stylesheet.
 		 * @param styleIndex
 		 * @param propertyIndex
 		 */
@@ -125,20 +125,20 @@ export default defineComponent({
 
 <template>
 	<div class="editor" :style="`--line-number-gutter-width: ${calculateLineNumbersWidth()}ch;`">
-		<div v-for="style, styleIndex in stylesheet" class="style">
+		<div v-for="rule, styleIndex in stylesheet" class="rule">
 			<span class="selector">
 				<input
 					:ref="`selector-${styleIndex}`"
 					type="text"
 					style="color: inherit;"
 					:style="{
-						width: `${style.selector.length}ch`
+						width: `${rule.selector.length}ch`
 					}"
-					v-model="style.selector"
+					v-model="rule.selector"
 					@keypress.enter="newProperty(styleIndex, 0)"
 				>
 			</span>&nbsp;{
-			<div v-for="property, propertyIndex in style.properties" class="property">
+			<div v-for="property, propertyIndex in rule.properties" class="property">
 				<input
 					:ref="`selector-${styleIndex}-property-${propertyIndex}`"
 					type="text"
@@ -178,8 +178,8 @@ export default defineComponent({
 					>
 				</template>;
 			</div>
-			<br v-if="style.properties.length <= 0">
-			<button style="margin-left: 4ch;" @click.stop="newProperty(styleIndex, style.properties.length)">+</button>
+			<br v-if="rule.properties.length <= 0">
+			<button style="margin-left: 4ch;" @click.stop="newProperty(styleIndex, rule.properties.length)">+</button>
 			<br>
 			<span class="selectorClose">}</span>
 			<br>
@@ -240,7 +240,7 @@ input:focus-within {
 	transform: translateY(0.15em);
 }
 
-.style {
+.rule {
 	margin-left: var(--line-number-gutter-width);
 	padding: 1ch;
 	border-left: 1px solid #888;
