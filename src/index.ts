@@ -8,6 +8,7 @@ export class CSSEditor {
 	private app;
 	public editor;
 	private internalStylesheet = [] as StyleRule[];
+	private updateCallbacks = [] as (UpdateCallback | undefined)[];
 
 	constructor (element: string) {
 		this.app = createApp(Editor);
@@ -23,7 +24,18 @@ export class CSSEditor {
 		this.internalStylesheet = value;
 	}
 
+	onUpdate (callback: UpdateCallback): number {
+		return this.updateCallbacks.push(callback) - 1;
+	}
+
+	offUpdate (callbackId: number): void {
+		this.updateCallbacks.splice(callbackId, 1, undefined);
+	}
+
 	private updateFromComponent (stylesheet: StyleRule[]): void {
 		this.internalStylesheet = stylesheet;
+		for (const callback of this.updateCallbacks) {
+			void callback?.(this.stringify(stylesheet));
+		}
 	}
 }
