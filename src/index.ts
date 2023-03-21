@@ -22,6 +22,7 @@ export class CSSEditor {
 
 	set stylesheet (value: StyleRule[]) {
 		this.internalStylesheet = value;
+		this.editor.stylesheet = value;
 	}
 
 	onUpdate (callback: UpdateCallback): number {
