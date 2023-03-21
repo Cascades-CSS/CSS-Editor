@@ -175,6 +175,7 @@ export default defineComponent({
 						}"
 						:value="string"
 						@keypress.enter="newProperty(styleIndex, propertyIndex + 1)"
+						@keydown.backspace="property.value.length <= 0 && focusInput(styleIndex, propertyIndex)"
 					>
 				</template>;
 			</div>
@@ -183,7 +184,7 @@ export default defineComponent({
 			<br>
 			<span class="selectorClose">}</span>
 			<br>
-			<button @click.stop="newStyle(styleIndex)">+</button>
+			<button @click.stop="newStyle(styleIndex + 1)">+</button>
 		</div>
 	</div>
 </template>
