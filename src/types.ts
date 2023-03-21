@@ -14,4 +14,4 @@ export interface ValueType {
 	additionalInput?: string
 }
 
-export type UpdateCallback = (stylesheet: string) => void
+export type UpdateCallback = (stylesheet: StyleRule[]) => void

@@ -25,14 +25,28 @@ export class CSSEditor {
 		this.editor.stylesheet = value;
 	}
 
+	/**
+	 * Use a callback to listen to updates in the stylesheet.
+	 * @param callback The callback. This will receive a copy of the stylesheet object.
+	 * @returns The callback's ID.
+	 */
 	onUpdate (callback: UpdateCallback): number {
 		return this.updateCallbacks.push(callback) - 1;
 	}
 
+	/**
+	 * Stop a callback from listening to updates in the stylesheet.
+	 * @param callbackId The ID of the callback.
+	 */
 	offUpdate (callbackId: number): void {
 		this.updateCallbacks.splice(callbackId, 1, undefined);
 	}
 
+	/**
+	 * Converts a stylesheet object into a CSS string.
+	 * @param stylesheet (Optional) A stylesheet object. If none is passed, the internal stylesheet is stringified.
+	 * @returns An equivalent CSS string.
+	 */
 	stringify (stylesheet?: StyleRule[]): string {
 		let output = '';
 		for (const rule of stylesheet ?? this.internalStylesheet) {
@@ -45,10 +59,15 @@ export class CSSEditor {
 		return output;
 	}
 
-	static parse (stylesheet: string): StyleRule[] {
+	/**
+	 * Converts a CSS string into a stylesheet object.
+	 * @param string A valid CSS string.
+	 * @returns An equivalent stylesheet object.
+	 */
+	static parse (string: string): StyleRule[] {
 		const output = [] as StyleRule[];
 
-		const rules = stylesheet.matchAll(/([^\{]+)\{([^\}]+)*\}/gmui);
+		const rules = string.matchAll(/([^\{]+)\{([^\}]+)*\}/gmui);
 	
 		for (const rule of rules) {
 			if (!rule[1]) continue;
@@ -79,7 +98,7 @@ export class CSSEditor {
 	private updateFromComponent (stylesheet: StyleRule[]): void {
 		this.internalStylesheet = stylesheet;
 		for (const callback of this.updateCallbacks) {
-			void callback?.(this.stringify(stylesheet));
+			void callback?.(structuredClone(stylesheet));
 		}
 	}
 }
