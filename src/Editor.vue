@@ -53,7 +53,6 @@ export default defineComponent({
 			if (typeof valueIndex === 'number') {
 				ref += `-value-${valueIndex}`;
 			}
-			console.log(ref);
 			const elem = this.$refs[ref] as HTMLInputElement[] | undefined;
 			elem?.[0]?.focus();
 		},
