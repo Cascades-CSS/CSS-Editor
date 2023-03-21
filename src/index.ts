@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import type { ComponentPublicInstance } from 'vue';
 import Editor from '@/Editor.vue';
 import '@/assets/base.css';
-import type { StyleRule } from '@/types';
+import type { StyleRule, UpdateCallback } from '@/types';
 
 export class CSSEditor {
 	private app;
