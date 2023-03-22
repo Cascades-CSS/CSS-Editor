@@ -36,6 +36,10 @@ export default defineComponent({
 		};
 	},
 	methods: {
+		/**
+		 * Determine the type of input field required to edit a particular value.
+		 * @param value 
+		 */
 		getValueType (value: string): ValueType {
 			let output = defaultValueType;
 			for (const [expression, entry] of valueTypes) {
@@ -46,6 +50,9 @@ export default defineComponent({
 			}
 			return output;
 		},
+		/**
+		 * Calculate the minimum width (in `ch`) required to display line numbers correctly.
+		 */
 		calculateLineNumbersWidth (): number {
 			let width = 0;
 			for (const rule of this.stylesheet) {
@@ -56,6 +63,12 @@ export default defineComponent({
 			}
 			return width.toString().length + 2;
 		},
+		/**
+		 * Move focus to a perticular input field.
+		 * @param styleIndex 
+		 * @param propertyIndex 
+		 * @param valueIndex 
+		 */
 		focusInput (styleIndex: number, propertyIndex?: number, valueIndex?: number): void {
 			let ref = `selector-${styleIndex}`;
 			if (typeof propertyIndex === 'number') {
