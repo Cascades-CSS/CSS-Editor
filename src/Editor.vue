@@ -4,7 +4,12 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import AngleInput from '@/components/AngleInput.vue';
+import Autocomplete from '@/components/Autocomplete.vue';
 import type { StyleRule, ValueType } from '@/types';
+import { all as allCSSProperties } from 'known-css-properties';
+
+allCSSProperties.sort();
+const textMeasurementCanvas = document.createElement('canvas');
 
 const valueTypes = new Map() as Map<RegExp, ValueType>;
 valueTypes.set(/^[a-z]+/ui, { name: 'string', color: '#CE9178' });
@@ -17,11 +22,17 @@ const defaultValueType = { name: 'string', color: '#CE9178' };
 export default defineComponent({
 	name: 'Editor',
 	components: {
-		AngleInput
+		AngleInput,
+		Autocomplete
 	},
 	data() {
 		return {
-			stylesheet: [] as StyleRule[]
+			stylesheet: [] as StyleRule[],
+			autocomplete: {
+				suggestions: [] as string[],
+				x: 0,
+				y: 0
+			}
 		};
 	},
 	methods: {
@@ -133,9 +144,9 @@ export default defineComponent({
 		},
 		/**
 		 * Add a new value at the specified `valueIndex` to a property at `propertyIndex` of a style rule at `styleIndex`.
-		 * @param styleIndex 
-		 * @param propertyIndex 
-		 * @param valueIndex 
+		 * @param styleIndex
+		 * @param propertyIndex
+		 * @param valueIndex
 		 */
 		newValue (styleIndex: number, propertyIndex: number, valueIndex?: number): void {
 			if (typeof valueIndex === 'number') {
@@ -167,6 +178,35 @@ export default defineComponent({
 					valueIndex - 1
 				);
 			});
+		},
+		/**
+		 * Get the width (in px) for a given text string.
+		 * (Assumes `monospace` font-family).
+		 * @param text
+		 */
+		getTextWidth(text: string): number {
+			let context = textMeasurementCanvas.getContext('2d');
+			if (!context) {
+				return 0;
+			}
+			context.font = 'monospace';
+			let metrics = context.measureText(text);
+			return metrics.width;
+		},
+		/**
+		 * Update the autocomplete box.
+		 * @param search The string to complete.
+		 * @param element The input element that the autocomplete box should follow.
+		 */
+		autocompleteSearch (search?: string, element?: HTMLInputElement): void {
+			if (!search || search?.length <= 0 || !element) {
+				this.autocomplete.suggestions = [];
+				return;
+			}
+			this.autocomplete.suggestions = allCSSProperties.filter((value) => value.includes(search)).sort((a, b) => b.startsWith('-') ? -1 : 1);
+
+			this.autocomplete.x = element.offsetLeft + this.getTextWidth(search);
+			this.autocomplete.y = element.offsetTop + element.offsetHeight;
 		}
 	},
 	mounted () {
@@ -195,7 +235,8 @@ export default defineComponent({
 						width: `${rule.selector.length}ch`
 					}"
 					v-model="rule.selector"
-					@keypress.enter="newProperty(styleIndex, 0)"
+					@input="autocompleteSearch(($event.target as HTMLInputElement).value, ($event.target as HTMLInputElement))"
+					@keypress.enter="newProperty(styleIndex, 0), autocompleteSearch()"
 					@keydown.backspace="rule.selector.length <= 0 ? deleteStyle(styleIndex) : undefined"
 				>
 			</span>&nbsp;{
@@ -248,6 +289,8 @@ export default defineComponent({
 			<br>
 			<button @click.stop="newStyle(styleIndex + 1)">+</button>
 		</div>
+
+		<Autocomplete :suggestions="autocomplete.suggestions" :x="autocomplete.x" :y="autocomplete.y" @select="" />
 	</div>
 </template>
 
