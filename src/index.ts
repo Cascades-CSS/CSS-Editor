@@ -13,7 +13,7 @@ export class CSSEditor {
 	constructor (element: string) {
 		this.app = createApp(Editor);
 		this.editor = this.app.mount(element) as ComponentPublicInstance<{}, {}, { stylesheet: StyleRule[] }>;
-		this.editor.$watch('stylesheet', (stylesheet) => this.updateFromComponent(stylesheet));
+		this.editor.$watch(() => this.editor.stylesheet , (stylesheet) => this.updateFromComponent(stylesheet), { deep: true });
 	}
 
 	get stylesheet (): StyleRule[] {
@@ -98,7 +98,7 @@ export class CSSEditor {
 	private updateFromComponent (stylesheet: StyleRule[]): void {
 		this.internalStylesheet = stylesheet;
 		for (const callback of this.updateCallbacks) {
-			void callback?.(structuredClone(stylesheet));
+			void callback?.(stylesheet);
 		}
 	}
 }
