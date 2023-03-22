@@ -303,7 +303,7 @@ export default defineComponent({
 			<button @click.stop="newStyle(styleIndex + 1)">+</button>
 		</div>
 
-		<Autocomplete :suggestions="autocomplete.suggestions" :x="autocomplete.x" :y="autocomplete.y" @select="" />
+		<!-- <Autocomplete :suggestions="autocomplete.suggestions" :x="autocomplete.x" :y="autocomplete.y" @select="" /> -->
 	</div>
 </template>
 
