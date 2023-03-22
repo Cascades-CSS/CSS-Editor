@@ -76,14 +76,33 @@ export default defineComponent({
 			this.stylesheet.push(style);
 		},
 		/**
-		 * Add a new style property at the specified index to a given rule in the stylesheet.
+		 * Remove a style rule from the specified index in the stylesheet.
+		 * @param index
+		 */
+		deleteStyle (index: number): void {
+			if (index <= 0) {
+				return;
+			}
+			this.stylesheet.splice(index, 1);
+			// Switch focus to the previous property's value input.
+			this.$nextTick(() => {
+				this.focusInput(
+					index - 1,
+					Math.max(this.stylesheet[index - 1].properties.length - 1, 0),
+					Math.max(this.stylesheet[index - 1].properties[Math.max(this.stylesheet[index - 1].properties.length - 1, 0)].values.length - 1, 0)
+				);
+			});
+			return;
+		},
+		/**
+		 * Add a new property at the specified `propertyIndex` to a style rule at `styleIndex`.
 		 * @param styleIndex
 		 * @param propertyIndex
 		 */
 		newProperty (styleIndex: number, propertyIndex?: number): void {
 			const property = {
 				key: '',
-				value: ''
+				values: ['']
 			};
 			if (typeof propertyIndex === 'number') {
 				this.stylesheet[styleIndex]?.properties.splice(propertyIndex, 0, property);
@@ -96,17 +115,58 @@ export default defineComponent({
 			this.stylesheet[styleIndex]?.properties.push(property);
 		},
 		/**
-		 * Remove a style property at the specified index from a given style rule in the stylesheet.
+		 * Remove a property at the specified `propertyIndex` from a style rule at `styleIndex`.
 		 * @param styleIndex
 		 * @param propertyIndex
 		 */
 		deleteProperty (styleIndex: number, propertyIndex: number): void {
 			this.stylesheet[styleIndex]?.properties.splice(propertyIndex, 1);
-			// Switch focus to the previous property's key input.
+			// Switch focus to the previous property's value input.
 			this.$nextTick(() => {
-				this.focusInput(styleIndex, propertyIndex > 0 ? propertyIndex - 1 : undefined);
+				this.focusInput(
+					styleIndex,
+					propertyIndex > 0 ? propertyIndex - 1 : undefined,
+					propertyIndex > 0 ? this.stylesheet[styleIndex].properties[propertyIndex - 1].values.length - 1 : undefined
+				);
 			});
 			return;
+		},
+		/**
+		 * Add a new value at the specified `valueIndex` to a property at `propertyIndex` of a style rule at `styleIndex`.
+		 * @param styleIndex 
+		 * @param propertyIndex 
+		 * @param valueIndex 
+		 */
+		newValue (styleIndex: number, propertyIndex: number, valueIndex?: number): void {
+			if (typeof valueIndex === 'number') {
+				this.stylesheet[styleIndex]?.properties[propertyIndex].values.splice(valueIndex, 0, '');
+				// Switch focus to the new value's input.
+				this.$nextTick(() => {
+					this.focusInput(styleIndex, propertyIndex, valueIndex);
+				});
+				return;
+			}
+			this.stylesheet[styleIndex]?.properties[propertyIndex].values.push('');
+		},
+		/**
+		 * Remove a value at the specified `valueIndex` from a property at `propertyIndex` of a style rule at `styleIndex`.
+		 * @param styleIndex 
+		 * @param propertyIndex 
+		 * @param valueIndex 
+		 */
+		deleteValue (styleIndex: number, propertyIndex: number, valueIndex: number): void {
+			if (valueIndex <= 0) {
+				return;
+			}
+			this.stylesheet[styleIndex].properties[propertyIndex].values.splice(valueIndex, 1);
+			// Switch focus to the previous value's input.
+			this.$nextTick(() => {
+				this.focusInput(
+					styleIndex,
+					propertyIndex,
+					valueIndex - 1
+				);
+			});
 		}
 	},
 	mounted () {
@@ -136,6 +196,7 @@ export default defineComponent({
 					}"
 					v-model="rule.selector"
 					@keypress.enter="newProperty(styleIndex, 0)"
+					@keydown.backspace="rule.selector.length <= 0 ? deleteStyle(styleIndex) : undefined"
 				>
 			</span>&nbsp;{
 			<div v-for="property, propertyIndex in rule.properties" class="property">
@@ -148,9 +209,9 @@ export default defineComponent({
 					}"
 					v-model="property.key"
 					@keypress.enter="focusInput(styleIndex, propertyIndex, 0)"
-					@keydown.backspace="deleteProperty(styleIndex, propertyIndex)"
+					@keydown.backspace="property.key.length <= 0 ? deleteProperty(styleIndex, propertyIndex) : undefined"
 				>:
-				<template v-for="string, valueIndex of property.value.split(' ')">
+				<template v-for="string, valueIndex of property.values">
 					<span
 						v-if="getValueType(string).additionalInput"
 						class="additionalInput"
@@ -162,7 +223,7 @@ export default defineComponent({
 						<input
 							v-else
 							:type="getValueType(string).additionalInput"
-							:value="string"
+							v-model="property.values[valueIndex]"
 						>
 					</span>
 					<input
@@ -173,9 +234,10 @@ export default defineComponent({
 							width: `${string.length}ch`,
 							color: getValueType(string).color
 						}"
-						:value="string"
-						@keypress.enter="newProperty(styleIndex, propertyIndex + 1)"
-						@keydown.backspace="property.value.length <= 0 && focusInput(styleIndex, propertyIndex)"
+						v-model="property.values[valueIndex]"
+						@keypress.enter="valueIndex < property.values.length - 1 ? focusInput(styleIndex, propertyIndex, valueIndex + 1) : newProperty(styleIndex, propertyIndex + 1)"
+						@keydown.backspace="string.length <= 0 ? valueIndex > 0 ? deleteValue(styleIndex, propertyIndex, valueIndex) : focusInput(styleIndex, propertyIndex) : undefined"
+						@keydown.space.prevent="newValue(styleIndex, propertyIndex, valueIndex + 1)"
 					>
 				</template>;
 			</div>

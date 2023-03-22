@@ -1,6 +1,6 @@
 interface Property {
 	key: string,
-	value: string
+	values: string[]
 }
 
 export interface StyleRule {

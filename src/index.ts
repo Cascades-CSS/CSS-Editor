@@ -52,7 +52,7 @@ export class CSSEditor {
 		for (const rule of stylesheet ?? this.internalStylesheet) {
 			output += `${rule.selector} {\n`;
 			for (const property of rule.properties) {
-				output += `${property.key}: ${property.value};`;
+				output += `${property.key}: ${property.values.join(' ')};`;
 			}
 			output += '}\n';
 		}
@@ -76,13 +76,13 @@ export class CSSEditor {
 	
 			for (const prop of rule[2]?.split(';') ?? []) {
 				const key = prop.split(':')[0]?.trim().replace('\n', '');
-				const value = prop.split(':')[1]?.trim().replace('\n', '');
+				const values = prop.split(':')[1]?.trim().replace('\n', '').split(' ');
 
-				if (!key || !value) continue;
+				if (!key || !values) continue;
 
 				properties.push({
 					key,
-					value 
+					values
 				});
 			}
 	
