@@ -2,13 +2,26 @@
   "name": "css-editor",
   "description": "An optimized editor, just for CSS.",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gigabyte5671/CSS-Editor.git"
+  },
+  "keywords": [
+    "css",
+    "editor",
+    "library"
+  ],
+  "author": {
+    "name": "Giga",
+    "email": "contact@zakweb.dev",
+    "url": "https://zakweb.dev/"
   },
   "dependencies": {
     "known-css-properties": "^0.27.0",
