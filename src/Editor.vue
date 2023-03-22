@@ -311,6 +311,7 @@ export default defineComponent({
 .editor {
 	--line-number-gutter-width: 3ch;
 	counter-reset: line-number;
+	position: relative;
 	display: flex;
 	flex-flow: column nowrap;
 	color: white;
@@ -371,7 +372,7 @@ input:focus-within {
 	counter-increment: line-number;
 	content: counter(line-number);
 	position: absolute;
-	left: 0.5ch;
+	left: -0.9ch;
 	width: var(--line-number-gutter-width);
 	color: #888;
 	text-align: right;
