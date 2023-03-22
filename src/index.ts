@@ -50,11 +50,13 @@ export class CSSEditor {
 	stringify (stylesheet?: StyleRule[]): string {
 		let output = '';
 		for (const rule of stylesheet ?? this.internalStylesheet) {
-			output += `${rule.selector} {\n`;
+			if (rule.selector.length <= 0) continue;
+			output += `${rule.selector} {`;
 			for (const property of rule.properties) {
-				output += `${property.key}: ${property.values.join(' ')};`;
+				if (property.key.length <= 0) continue;
+				output += `\n\t${property.key}: ${property.values.join(' ')};`;
 			}
-			output += '}\n';
+			output += '\n}\n';
 		}
 		return output;
 	}
