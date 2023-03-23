@@ -43,13 +43,21 @@ export class CSSEditor {
 	}
 
 	/**
+	 * Converts the editor's internal stylesheet object into a CSS string.
+	 * @returns The CSS string.
+	 */
+	stringify (): string {
+		return CSSEditor.stringify(this.internalStylesheet);
+	}
+
+	/**
 	 * Converts a stylesheet object into a CSS string.
-	 * @param stylesheet (Optional) A stylesheet object. If none is passed, the internal stylesheet is stringified.
+	 * @param stylesheet A stylesheet object.
 	 * @returns An equivalent CSS string.
 	 */
-	stringify (stylesheet?: StyleRule[]): string {
+	static stringify (stylesheet: StyleRule[]): string {
 		let output = '';
-		for (const rule of stylesheet ?? this.internalStylesheet) {
+		for (const rule of stylesheet) {
 			if (rule.selector.length <= 0) continue;
 			output += `${rule.selector} {`;
 			for (const property of rule.properties) {
