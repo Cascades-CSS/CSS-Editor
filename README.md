@@ -29,9 +29,36 @@ function yourCallback (stylesheet) {
 	// Do something awesome!
 }
 
-editor.onUpdate(yourCallback);
+const callbackID = editor.onUpdate(yourCallback);
+// You can add as many callbacks as you like. They will all be called whenever the stylesheet is updated.
 ```
-(You can add as many callbacks as you like. They will all be called whenever the stylesheet is updated.)
+
+Stop listening to changes in the stylesheet:
+```typescript
+editor.offUpdate(callbackID);
+```
+
+The `CSSEditor` class also has two static methods, `parse` and `stringify`:
+```typescript
+// Convert a CSS string into a stylesheet object.
+const stylesheet = CSSEditor.parse('div { border: 10px solid red; }');
+```
+
+```typescript
+// Convert a stylesheet object into a CSS string.
+const stylesheet = [
+	{
+		selector: 'div',
+		properties: [
+			{
+				key: 'border',
+				values: [ '10px', 'solid', 'red' ] 
+			}
+		]
+	}
+];
+const string = CSSEditor.stringify(stylesheet);
+```
 
 
 ## Development
