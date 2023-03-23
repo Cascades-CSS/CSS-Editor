@@ -1,5 +1,5 @@
 {
-  "name": "css-editor",
+  "name": "@css-canvas/editor",
   "description": "An optimized editor, just for CSS.",
   "version": "1.0.0",
   "type": "module",
