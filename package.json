@@ -1,7 +1,7 @@
 {
   "name": "css-editor",
   "description": "An optimized editor, just for CSS.",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "files": [
     "dist/index.js",
