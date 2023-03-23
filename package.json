@@ -3,12 +3,19 @@
   "description": "An optimized editor, just for CSS.",
   "version": "0.0.0",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist/index.js",
+    "dist/index.js.map",
+    "dist/index.umd.cjs",
+    "dist/index.umd.cjs.map",
+    "dist/style.css"
+  ],
   "main": "dist/my-lib.umd.cjs",
   "module": "dist/my-lib.js",
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "build-package": "SET NODE_ENV=development&& run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit"

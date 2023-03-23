@@ -30,5 +30,5 @@ export default defineConfig({
 			'@': fileURLToPath(new URL('./src', import.meta.url))
 		}
 	},
-	build: process.env.NODE_ENV === "production" ? prodBuild : devBuild
+	build: process.env.NODE_ENV === 'production' ? prodBuild : devBuild
 });
