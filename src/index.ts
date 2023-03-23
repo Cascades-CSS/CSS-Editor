@@ -6,7 +6,7 @@ import type { StyleRule, UpdateCallback } from '@/types';
 
 export class CSSEditor {
 	private app;
-	public editor;
+	private editor;
 	private internalStylesheet = [] as StyleRule[];
 	private updateCallbacks = [] as (UpdateCallback | undefined)[];
 
