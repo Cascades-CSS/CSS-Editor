@@ -20,13 +20,13 @@ import { CSSEditor } from '/src/index.ts';
 
 Attach the editor to an element on your page:
 ```typescript
-const editor = new CSSEditor('#editor');	// Replace '#editor' with the selector for your element.
+const editor = new CSSEditor('#editor');    // Replace '#editor' with the selector for your element.
 ```
 
 Listen to changes in the stylesheet with a callback:
 ```typescript
 function yourCallback (stylesheet) {
-	// Do something awesome!
+    // Do something awesome!
 }
 
 const callbackID = editor.onUpdate(yourCallback);
@@ -47,15 +47,15 @@ const stylesheet = CSSEditor.parse('div { border: 10px solid red; }');
 ```typescript
 // Convert a stylesheet object into a CSS string.
 const stylesheet = [
-	{
-		selector: 'div',
-		properties: [
-			{
-				key: 'border',
-				values: [ '10px', 'solid', 'red' ] 
-			}
-		]
-	}
+    {
+        selector: 'div',
+        properties: [
+            {
+                key: 'border',
+                values: [ '10px', 'solid', 'red' ] 
+            }
+        ]
+    }
 ];
 const string = CSSEditor.stringify(stylesheet);
 ```
