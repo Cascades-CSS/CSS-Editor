@@ -18,9 +18,9 @@ const devBuild: BuildOptions = {
 	},
 	rollupOptions: {
 		output: {
-        	chunkFileNames: '[name].js'
+			chunkFileNames: '[name].js'
 		}
-    }
+	}
 };
 
 // https://vitejs.dev/config/
