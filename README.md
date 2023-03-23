@@ -8,7 +8,7 @@ Try it out with the [demo](https://css-editor.zakweb.dev/).
 
 Install CSS Editor with:
 ```sh
-npm install css-editor
+npm install @css-canvas/editor
 ```
 
 ## Usage
