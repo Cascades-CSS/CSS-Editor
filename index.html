@@ -49,6 +49,15 @@
 			nav ul a {
 				color: inherit;
 			}
+			.tagline {
+				position: relative;
+				display: block;
+				width: fit-content;
+				padding: 0.1em 1em 0.3em;
+				color: #fff;
+				background-color: hsl(219, 29%, 30%);
+				border-radius: 1em;
+			}
 			#editor,
 			#output {
 				display: block;
@@ -84,8 +93,7 @@
 			</nav>
 		</header>
 		<main>
-			<p>An optimized editor, just for CSS.</p>
-			<br>
+			<p class="tagline">An optimized editor, just for CSS.</p>
 			<h2>Editor:</h2>
 			<div id="editor"></div>
 			<h2>Output:</h2>
