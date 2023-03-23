@@ -4,11 +4,11 @@ import { defineConfig } from 'vite';
 import type { BuildOptions } from 'vite';
 import vue from '@vitejs/plugin-vue';
 
-const devBuild: BuildOptions = {
+const prodBuild: BuildOptions = {
 	sourcemap: true
 };
 
-const prodBuild: BuildOptions = {
+const devBuild: BuildOptions = {
 	sourcemap: true,
 	lib: {
 		entry: resolve(__dirname, 'src/index.ts'),
