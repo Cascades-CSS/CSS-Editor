@@ -12,8 +12,8 @@
     "dist/index.umd.cjs.map",
     "dist/style.css"
   ],
-  "main": "dist/my-lib.umd.cjs",
-  "module": "dist/my-lib.js",
+  "main": "dist/index.umd.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "vite",
