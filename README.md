@@ -17,7 +17,7 @@ npm install @css-canvas/editor
 
 Import the `CSSEditor` class into your project:
 ```typescript
-import { CSSEditor } from '/src/index.ts';
+import { CSSEditor } from '@css-canvas/editor';
 ```
 
 Attach the editor to an element on your page:
