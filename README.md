@@ -2,7 +2,7 @@
 
 An optimized editor, just for CSS.
 
-Used by [CSS Canvas](https://css-canvas.zakweb.dev/).
+Soon to be used by [Cascades](https://cascades.app/).
 
 Try it out with the [demo](https://css-editor.zakweb.dev/).
 
