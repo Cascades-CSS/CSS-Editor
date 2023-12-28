@@ -1,6 +1,3 @@
-<script setup lang="ts">
-</script>
-
 <script lang="ts">
 import { defineComponent } from 'vue';
 import AngleInput from '@/components/AngleInput.vue';
@@ -27,9 +24,9 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			stylesheet: [] as StyleRule[],
+			stylesheet: new Array<StyleRule>(),
 			autocomplete: {
-				suggestions: [] as string[],
+				suggestions: new Array<string>(),
 				x: 0,
 				y: 0
 			}
@@ -64,7 +61,7 @@ export default defineComponent({
 			return width.toString().length + 2;
 		},
 		/**
-		 * Move focus to a perticular input field.
+		 * Move focus to a particular input field.
 		 * @param styleIndex 
 		 * @param propertyIndex 
 		 * @param valueIndex 
