@@ -215,7 +215,7 @@ export default defineComponent({
 					v-model="rule.selector"
 					@input="autocompleteSearch(($event.target as HTMLInputElement).value, ($event.target as HTMLInputElement))"
 					@keypress.enter="newProperty(styleIndex, 0), autocompleteSearch()"
-					@keydown.backspace="rule.selector.length <= 0 ? deleteStyle(styleIndex) : undefined"
+					@keydown.backspace="rule.selector.length <= 0 && ($event.preventDefault(), deleteStyle(styleIndex))"
 				>
 			</span>&nbsp;{
 			<div v-for="property, propertyIndex in rule.properties" class="property">
@@ -228,7 +228,7 @@ export default defineComponent({
 					}"
 					v-model="property.key"
 					@keypress.enter="focusInput(styleIndex, propertyIndex, 0)"
-					@keydown.backspace="property.key.length <= 0 ? deleteProperty(styleIndex, propertyIndex) : undefined"
+					@keydown.backspace="property.key.length <= 0 && ($event.preventDefault(), deleteProperty(styleIndex, propertyIndex))"
 				>:
 				<template v-for="string, valueIndex of property.values">
 					<span
@@ -255,7 +255,7 @@ export default defineComponent({
 						}"
 						v-model="property.values[valueIndex]"
 						@keypress.enter="valueIndex < property.values.length - 1 ? focusInput(styleIndex, propertyIndex, valueIndex + 1) : newProperty(styleIndex, propertyIndex + 1)"
-						@keydown.backspace="string.length <= 0 ? valueIndex > 0 ? deleteValue(styleIndex, propertyIndex, valueIndex) : focusInput(styleIndex, propertyIndex) : undefined"
+						@keydown.backspace="string.length <= 0 && ($event.preventDefault(), valueIndex > 0 ? deleteValue(styleIndex, propertyIndex, valueIndex) : focusInput(styleIndex, propertyIndex))"
 						@keydown.space.prevent="newValue(styleIndex, propertyIndex, valueIndex + 1)"
 					>
 				</template>;
