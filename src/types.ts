@@ -1,17 +1,17 @@
-interface Property {
-	key: string,
-	values: string[]
+export class StyleProperty {
+	key = '';
+	values = [''];
 }
 
-export interface StyleRule {
-	selector: string,
-	properties: Property[]
+export class StyleRule {
+	selector = '';
+	properties = new Array<StyleProperty>();
 }
 
 export interface ValueType {
-	name: string,
-	color: string,
-	additionalInput?: string
+	name: string;
+	color: string;
+	additionalInput?: string;
 }
 
-export type UpdateCallback = (stylesheet: StyleRule[]) => void
+export type UpdateCallback = (stylesheet: Array<StyleRule>) => void;

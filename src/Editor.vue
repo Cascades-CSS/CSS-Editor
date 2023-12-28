@@ -2,7 +2,7 @@
 import { defineComponent } from 'vue';
 import AngleInput from '@/components/AngleInput.vue';
 import Autocomplete from '@/components/Autocomplete.vue';
-import type { StyleRule, ValueType } from '@/types';
+import { StyleProperty, StyleRule, type ValueType } from '@/types';
 import { all as allCSSProperties } from 'known-css-properties';
 
 allCSSProperties.sort();
@@ -54,9 +54,7 @@ export default defineComponent({
 			let width = 0;
 			for (const rule of this.stylesheet) {
 				width += 2;
-				for (const property of rule.properties) {
-					width++;
-				}
+				width += rule.properties.length;
 			}
 			return width.toString().length + 2;
 		},
@@ -82,16 +80,11 @@ export default defineComponent({
 		 * @param index
 		 */
 		newStyle (index?: number): void {
-			const style = {
-				selector: '',
-				properties: []
-			};
+			const style = new StyleRule();
 			if (typeof index === 'number') {
 				this.stylesheet.splice(index, 0, style);
 				// Switch focus to the new style rule's selector input.
-				this.$nextTick(() => {
-					this.focusInput(index);
-				});
+				this.$nextTick(this.focusInput.bind(this, index));
 				return;
 			}
 			this.stylesheet.push(style);
@@ -101,19 +94,15 @@ export default defineComponent({
 		 * @param index
 		 */
 		deleteStyle (index: number): void {
-			if (index <= 0) {
-				return;
-			}
+			if (index <= 0) return;
 			this.stylesheet.splice(index, 1);
 			// Switch focus to the previous property's value input.
-			this.$nextTick(() => {
-				this.focusInput(
-					index - 1,
-					Math.max(this.stylesheet[index - 1].properties.length - 1, 0),
-					Math.max(this.stylesheet[index - 1].properties[Math.max(this.stylesheet[index - 1].properties.length - 1, 0)].values.length - 1, 0)
-				);
-			});
-			return;
+			this.$nextTick(this.focusInput.bind(
+				this,
+				index - 1,
+				Math.max(this.stylesheet[index - 1].properties.length - 1, 0),
+				Math.max(this.stylesheet[index - 1].properties[Math.max(this.stylesheet[index - 1].properties.length - 1, 0)].values.length - 1, 0)
+			));
 		},
 		/**
 		 * Add a new property at the specified `propertyIndex` to a style rule at `styleIndex`.
@@ -121,16 +110,11 @@ export default defineComponent({
 		 * @param propertyIndex
 		 */
 		newProperty (styleIndex: number, propertyIndex?: number): void {
-			const property = {
-				key: '',
-				values: ['']
-			};
+			const property = new StyleProperty();
 			if (typeof propertyIndex === 'number') {
 				this.stylesheet[styleIndex]?.properties.splice(propertyIndex, 0, property);
 				// Switch focus to the new property's key input.
-				this.$nextTick(() => {
-					this.focusInput(styleIndex, propertyIndex);
-				});
+				this.$nextTick(this.focusInput.bind(this, styleIndex, propertyIndex));
 				return;
 			}
 			this.stylesheet[styleIndex]?.properties.push(property);
@@ -143,14 +127,12 @@ export default defineComponent({
 		deleteProperty (styleIndex: number, propertyIndex: number): void {
 			this.stylesheet[styleIndex]?.properties.splice(propertyIndex, 1);
 			// Switch focus to the previous property's value input.
-			this.$nextTick(() => {
-				this.focusInput(
-					styleIndex,
-					propertyIndex > 0 ? propertyIndex - 1 : undefined,
-					propertyIndex > 0 ? this.stylesheet[styleIndex].properties[propertyIndex - 1].values.length - 1 : undefined
-				);
-			});
-			return;
+			this.$nextTick(this.focusInput.bind(
+				this,
+				styleIndex,
+				propertyIndex > 0 ? propertyIndex - 1 : undefined,
+				propertyIndex > 0 ? this.stylesheet[styleIndex].properties[propertyIndex - 1].values.length - 1 : undefined
+			));
 		},
 		/**
 		 * Add a new value at the specified `valueIndex` to a property at `propertyIndex` of a style rule at `styleIndex`.
@@ -162,9 +144,7 @@ export default defineComponent({
 			if (typeof valueIndex === 'number') {
 				this.stylesheet[styleIndex]?.properties[propertyIndex].values.splice(valueIndex, 0, '');
 				// Switch focus to the new value's input.
-				this.$nextTick(() => {
-					this.focusInput(styleIndex, propertyIndex, valueIndex);
-				});
+				this.$nextTick(this.focusInput.bind(this, styleIndex, propertyIndex, valueIndex));
 				return;
 			}
 			this.stylesheet[styleIndex]?.properties[propertyIndex].values.push('');
@@ -176,32 +156,26 @@ export default defineComponent({
 		 * @param valueIndex 
 		 */
 		deleteValue (styleIndex: number, propertyIndex: number, valueIndex: number): void {
-			if (valueIndex <= 0) {
-				return;
-			}
+			if (valueIndex <= 0) return;
 			this.stylesheet[styleIndex].properties[propertyIndex].values.splice(valueIndex, 1);
 			// Switch focus to the previous value's input.
-			this.$nextTick(() => {
-				this.focusInput(
-					styleIndex,
-					propertyIndex,
-					valueIndex - 1
-				);
-			});
+			this.$nextTick(this.focusInput.bind(
+				this,
+				styleIndex,
+				propertyIndex,
+				valueIndex - 1
+			));
 		},
 		/**
 		 * Get the width (in px) for a given text string.
 		 * (Assumes `monospace` font-family).
 		 * @param text
 		 */
-		getTextWidth(text: string): number {
-			let context = textMeasurementCanvas.getContext('2d');
-			if (!context) {
-				return 0;
-			}
+		getTextWidth (text: string): number {
+			const context = textMeasurementCanvas.getContext('2d');
+			if (!context) return 0;
 			context.font = 'monospace';
-			let metrics = context.measureText(text);
-			return metrics.width;
+			return context.measureText(text).width;
 		},
 		/**
 		 * Update the autocomplete box.
@@ -214,20 +188,14 @@ export default defineComponent({
 				return;
 			}
 			this.autocomplete.suggestions = allCSSProperties.filter((value) => value.includes(search)).sort((a, b) => b.startsWith('-') ? -1 : 1);
-
 			this.autocomplete.x = element.offsetLeft + this.getTextWidth(search);
 			this.autocomplete.y = element.offsetTop + element.offsetHeight;
 		}
 	},
 	mounted () {
 		if (this.stylesheet.length <= 0) {
-			this.stylesheet.push({
-				selector: '',
-				properties: []
-			});
-			this.$nextTick(() => {
-				this.focusInput(0);
-			});
+			this.stylesheet.push(new StyleRule());
+			this.$nextTick(this.focusInput.bind(this, 0));
 		}
 	}
 });
