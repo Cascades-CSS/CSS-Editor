@@ -1,4 +1,4 @@
-# <img width="48" src="https://github.com/Gigabyte5671/CSS-Editor/raw/main/src/assets/branding/logo.svg"> CSS Editor
+# <img width="48" src="https://github.com/Cascades-CSS/CSS-Editor/raw/main/src/assets/branding/logo.svg"> CSS Editor
 
 An optimized editor, just for CSS.
 
